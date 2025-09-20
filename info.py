@@ -145,7 +145,7 @@ HAS_SSL = bool(getenv('HAS_SSL', False))
 if HAS_SSL:
     URL = "geographical-wildebeest-keshavraj-3243a53b.koyeb.app".format(FQDN)
 else:
-    URL = "geographical-wildebeest-keshavraj-3243a53b.koyeb.app/".format(FQDN)
+    URL = "geographical-wildebeest-keshavraj-3243a53b.koyeb.app".format(FQDN)
 
 
 REACTIONS = ["🤝", "😇", "🤗", "😍", "👍", "🎅", "😐", "🥰", "🤩", "😱", "🤣", "😘", "👏", "😛", "😈", "🎉", "⚡️", "🫡", "🤓", "😎", "🏆", "🔥", "🤭", "🌚", "🆒", "👻", "😁"]
