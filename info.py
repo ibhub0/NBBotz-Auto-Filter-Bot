@@ -33,7 +33,7 @@ ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002368981263').split()]
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002567856061'))  
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002567856061'))  
-MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002488086781'))  
+MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002447923581'))  
 PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-1002520222866')) 
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
@@ -56,8 +56,8 @@ CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/sdmoviespointees')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/moviesbazaarsupp')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/online_shopping0007')
 
-AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002488086781 -1002447923581") # add multiple channels here, separated by single space
-AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002488086781 -1002447923581') # add multiple channels here, separated by single space
+AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002488086781 -1002447923581 -1002423033746") # add multiple channels here, separated by single space
+AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002488086781 -1002447923581 -1002423033746') # add multiple channels here, separated by single space
 
 IS_VERIFY = is_enabled('IS_VERIFY', False)
 LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '100'))
@@ -105,7 +105,7 @@ MELCOW_NEW_USERS = is_enabled((environ.get('MELCOW_NEW_USERS', "False")), False)
 PROTECT_CONTENT = is_enabled((environ.get('PROTECT_CONTENT', "False")), True)
 PM_SEARCH = bool(environ.get('PM_SEARCH', True)) 
 EMOJI_MODE = bool(environ.get('EMOJI_MODE', False)) 
-PAID_STREAM = bool(environ.get('PAID_STREAM', True)) 
+PAID_STREAM = bool(environ.get('PAID_STREAM', False)) 
 STREAM_MODE = bool(environ.get('STREAM_MODE', True))
 MAINTENANCE_MODE = bool(environ.get('MAINTENANCE_MODE', False)) 
 
