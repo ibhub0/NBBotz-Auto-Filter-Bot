@@ -33,13 +33,13 @@ ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002368981263').split()]
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002567856061'))  
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002567856061'))  
-MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002447923581'))  
+MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1003074016132'))  
 PREMIUM_LOGS = int(environ.get('PREMIUM_LOGS', '-1002520222866')) 
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
-reqst_channel = environ.get('REQST_CHANNEL_ID', '-1002447923581') 
+reqst_channel = environ.get('REQST_CHANNEL_ID', '-1003074016132') 
 REQST_CHANNEL = int(reqst_channel) if reqst_channel and id_pattern.search(reqst_channel) else None
-support_chat_id = environ.get('SUPPORT_CHAT_ID', '-1002491588102') 
+support_chat_id = environ.get('SUPPORT_CHAT_ID', '-4890488652') 
 SUPPORT_CHAT_ID = int(support_chat_id) if support_chat_id and id_pattern.search(support_chat_id) else None
 
 DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://Database123:Database123@cluster0.qk46lwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -52,11 +52,11 @@ DATABASE_URI2 = environ.get('DATABASE_URI2', "")
 DB_CHANGE_LIMIT = int(environ.get('DB_CHANGE_LIMIT', "432")) 
 
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/sdmoviespointes')
-CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/sdmoviespointees')
+CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/filmy4u_hd')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/moviesbazaarsupp')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/online_shopping0007')
 
-AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002488086781 -1002447923581 -1002423033746") # add multiple channels here, separated by single space
+AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002488086781 -1003074016132 -1002423033746") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002488086781 -1002447923581 -1002423033746') # add multiple channels here, separated by single space
 
 IS_VERIFY = is_enabled('IS_VERIFY', False)
