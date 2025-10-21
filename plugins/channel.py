@@ -53,6 +53,20 @@ async def media(bot, message):
         LOGGER.error(f"Error In Movie Update - {e}")
         pass
 
+async def get_file_website_url(kind, search_movie):
+    """Content ke 'kind' ke aadhar par website URL generate karta hai."""
+    # 'kind' should be uppercase (e.g., 'MOVIE', 'TV_SERIES')
+    if "MOVIE" in kind:
+        base_url = "https://filmy4uhd.vercel.app/Movies"
+    elif "SERIES" in kind:
+        base_url = "https://filmy4uhd.vercel.app/Series"
+    else:
+        base_url = "https://filmy4uhd.vercel.app"
+    
+    # Filename ko URL-friendly banana
+    return f"{base_url}/{search_movie}"
+
+
 async def send_movie_update(bot, file_name, caption):
     try:
         file_name = await movie_name_format(file_name)
@@ -76,18 +90,24 @@ async def send_movie_update(bot, file_name, caption):
         imdb_link = imdb_data.get("url", "") if imdb_data else ""
         kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_") if imdb_data else ""
         poster = await fetch_movie_poster(title, year)        
+        
         search_movie = file_name.replace(" ", "-")
         unique_id = generate_unique_id(search_movie)
         reaction_counts[unique_id] = {"❤️": 0, "👍": 0, "👎": 0, "🔥": 0}
         user_reactions[unique_id] = {}        
         full_caption = SILENTX_UPDATE_CAPTION.format(file_name, kind, quality, pixel, language, imdb_link)
+
+        # Dynamic URL generation for the 'Get File' button
+        get_file_url = await get_file_website_url(kind, search_movie)
+
         buttons = [[
             InlineKeyboardButton(f"❤️ {reaction_counts[unique_id]['❤️']}", callback_data=f"r_{unique_id}_{search_movie}_heart"),                
             InlineKeyboardButton(f"👍 {reaction_counts[unique_id]['👍']}", callback_data=f"r_{unique_id}_{search_movie}_like"),
             InlineKeyboardButton(f"👎 {reaction_counts[unique_id]['👎']}", callback_data=f"r_{unique_id}_{search_movie}_dislike"),
             InlineKeyboardButton(f"🔥 {reaction_counts[unique_id]['🔥']}", callback_data=f"r_{unique_id}_{search_movie}_fire")
         ],[
-            InlineKeyboardButton('Get File', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
+            # 'Get File' button ab website ke link par jayega
+            InlineKeyboardButton('Get File', url=get_file_url) 
         ]]
         if poster:
             photo_file = io.BytesIO(poster)
@@ -115,6 +135,15 @@ async def reaction_handler(client, query):
         new_emoji = emoji_map[new_reaction]       
         if unique_id not in reaction_counts:
             return
+        
+        # IMDB details ko dobara fetch karein taaki 'kind' mil sake (Reaction update ke liye zaroori)
+        # Yeh thoda slow ho sakta hai, behtar yahi hai ki 'kind' ko callback data mein pass kiya jaye ya message text se nikala jaye.
+        # Lekin current code structure mein yeh sabse seedha tareeka hai.
+        file_name = search_movie.replace("-", " ")
+        imdb_data = await get_imdb_details(file_name)
+        kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_")
+        get_file_url = await get_file_website_url(kind, search_movie)
+        
         if user_id in user_reactions[unique_id]:
             old_emoji = user_reactions[unique_id][user_id]
             if old_emoji == new_emoji:
@@ -123,13 +152,14 @@ async def reaction_handler(client, query):
                 reaction_counts[unique_id][old_emoji] -= 1
         user_reactions[unique_id][user_id] = new_emoji
         reaction_counts[unique_id][new_emoji] += 1
+        
         updated_buttons = [[
             InlineKeyboardButton(f"❤️ {reaction_counts[unique_id]['❤️']}", callback_data=f"r_{unique_id}_{search_movie}_heart"),                
             InlineKeyboardButton(f"👍 {reaction_counts[unique_id]['👍']}", callback_data=f"r_{unique_id}_{search_movie}_like"),
             InlineKeyboardButton(f"👎 {reaction_counts[unique_id]['👎']}", callback_data=f"r_{unique_id}_{search_movie}_dislike"),
             InlineKeyboardButton(f"🔥 {reaction_counts[unique_id]['🔥']}", callback_data=f"r_{unique_id}_{search_movie}_fire")
         ],[
-            InlineKeyboardButton('Get File', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
+            InlineKeyboardButton('Get File', url=get_file_url) # Updated URL
         ]]
         await query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(updated_buttons))
     except Exception as e:
