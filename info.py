@@ -59,14 +59,14 @@ UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/online_shop
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002488086781 -1003074016132 -1002423033746") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002488086781 -1002447923581 -1002423033746') # add multiple channels here, separated by single space
 
-IS_VERIFY = is_enabled('IS_VERIFY', False)
-LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '100'))
-LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-100'))
+IS_VERIFY = is_enabled('IS_VERIFY', True)
+LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1002638205239'))
+LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1002666589163'))
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://telegra.ph/file/9ecc5d6e4df5b83424896.jpg")
 
-TUTORIAL = environ.get("TUTORIAL", "https://t.me/")
-TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
-TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/how_to_downlod_7")
+TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/how_to_downlod_7")
+TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/how_to_downlod_7")
 
 SHORTENER_API = environ.get("SHORTENER_API", "21ec6d4dcdd7c0b00077994d7e87fcefc24511d5")
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "flylinks.ct.ws")
