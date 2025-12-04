@@ -125,6 +125,9 @@ async def start(client, message):
         if referdb.is_user_in_list(message.from_user.id):
             await message.reply_text("Yᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴀʟʀᴇᴀᴅʏ ɪɴᴠɪᴛᴇᴅ ❗")
             return
+        if await db.is_user_exist(message.from_user.id): 
+            await message.reply_text("‼️ Yᴏᴜ Hᴀᴠᴇ Bᴇᴇɴ Aʟʀᴇᴀᴅʏ Iɴᴠɪᴛᴇᴅ ᴏʀ Jᴏɪɴᴇᴅ")
+            return 
         try:
             uss = await client.get_users(user_id)
         except Exception:
@@ -278,6 +281,7 @@ async def start(client, message):
             size = get_size(files1.file_size)
             f_caption = files1.caption
             settings = await get_settings(int(grp_id))
+            DELETE_TIME = settings.get("auto_del_time", AUTO_DELETE_TIME)
             SILENTX_CAPTION = settings.get('caption', CUSTOM_FILE_CAPTION)
             if SILENTX_CAPTION:
                 try:
@@ -339,6 +343,7 @@ async def start(client, message):
             size=get_size(file.file_size)
             f_caption = f"<code>{title}</code>"
             settings = await get_settings(int(grp_id))
+            DELETE_TIME = settings.get("auto_del_time", AUTO_DELETE_TIME)
             SILENTX_CAPTION = settings.get('caption', CUSTOM_FILE_CAPTION)
             if SILENTX_CAPTION:
                 try:
@@ -359,7 +364,8 @@ async def start(client, message):
     title = clean_filename(files.file_name)
     size = get_size(files.file_size)
     f_caption = files.caption
-    settings = await get_settings(int(grp_id))            
+    settings = await get_settings(int(grp_id))         
+    DELETE_TIME = settings.get("auto_del_time", AUTO_DELETE_TIME)
     SILENTX_CAPTION = settings.get('caption', CUSTOM_FILE_CAPTION)
     if SILENTX_CAPTION:
         try:
@@ -1115,3 +1121,12 @@ async def reset_all_settings(client, message):
     except Exception as e:
         LOGGER.error(f"Error Processing Reset All Settings Command: {str(e)}")
         await message.reply("<b>ᴇʀʀᴏʀ 🚫.oᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴅᴇʟᴇᴛɪɴɢ ɢʀᴏᴜᴘ ꜱᴇᴛᴛɪɴɢꜱ! ᴘʟᴇᴀꜱᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.</b>", quote=True)       
+
+@Client.on_message(filters.command("dropgroups") & filters.user(ADMINS))
+async def drop_groups_command(client, message):
+    try:
+        await db.grp.drop()
+        await message.reply("The 'groups' Collection Has Been Deleted.")
+    except Exception as e:
+        await message.reply(f"Failed to delete collection: {e}")
+        

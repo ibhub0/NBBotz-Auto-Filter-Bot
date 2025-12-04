@@ -14,15 +14,6 @@ from datetime import datetime, timedelta
 from logging_helper import LOGGER
 
 
-_db_stats_cache_primary = {
-    "timestamp": None,
-    "primary_size": 0
-}
-_db_stats_cache_secondary = {
-    "timestamp": None,
-    "primary_size": 0
-}
-
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
 instance = Instance.from_db(db)
@@ -58,28 +49,15 @@ class Media2(Document):
         indexes = ('$file_name', )
         collection_name = COLLECTION_NAME
 
-async def check_db_size(db, cache):
-    try:
-        now = datetime.utcnow()
-        cache_stale = cache["timestamp"] is None or \
-                      (now - cache["timestamp"] > timedelta(minutes=10))
-        if not cache_stale:
-            return cache["primary_size"]
-        dbstats = await db.command("dbStats")
-        db_size = dbstats['dataSize'] + dbstats['indexSize']
-        db_size_mb = db_size / (1024 * 1024) 
-        cache["primary_size"] = db_size_mb
-        cache["timestamp"] = now
-        return db_size_mb
-    except Exception as e:
-        LOGGER.error(f"Error Checking Database Size: {e}")
-        return 0 
+async def check_db_size(silentdb):
+    return (await silentdb.command("dbstats"))['dataSize']
     
 async def save_file(media):
     file_id, file_ref = unpack_new_file_id(media.file_id)
     file_name = re.sub(r"[_\-\.#+$%^&*()!~`,;:\"'?/<>\[\]{}=|\\]", " ", str(media.file_name))
     file_name = re.sub(r"\s+", " ", file_name).strip()    
-    primary_db_size = await check_db_size(db, _db_stats_cache_primary)
+    primary_db_size = await check_db_size(db)
+    db_change_limit_bytes = DB_CHANGE_LIMIT * 1024 * 1024
     use_secondary = False
     saveMedia = Media
     exists_in_primary = await Media.count_documents({'file_id': file_id}, limit=1)
@@ -87,7 +65,7 @@ async def save_file(media):
         LOGGER.info(f'{file_name} Is Already Saved In Primary Database!')
         return False, 0
         
-    if MULTIPLE_DB and primary_db_size >= DB_CHANGE_LIMIT:
+    if MULTIPLE_DB and primary_db_size >= db_change_limit_bytes:
         LOGGER.info("Primary Database Is Low On Space. Switching To Secondary DB.")
         saveMedia = Media2
         use_secondary = True
