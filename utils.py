@@ -259,20 +259,9 @@ async def search_gagala(text):
     return [title.getText() for title in titles]
 
 async def get_shortlink(link, grp_id, is_second_shortener=False, is_third_shortener=False):
-    settings = await get_settings(grp_id)
-    if is_third_shortener:             
-        api, site = settings['api_three'], settings['shortner_three']
-    else:
-        if is_second_shortener:
-            api, site = settings['api_two'], settings['shortner_two']
-        else:
-            api, site = settings['api'], settings['shortner']
-    shortzy = Shortzy(api, site)
-    try:
-        link = await shortzy.convert(link)
-    except Exception as e:
-        link = await shortzy.get_quick_link(link)
-    return link
+    # SafeLink Integration: Directly return the BLOG_URL with the link as a token
+    # The site expects ?token={original_telegram_start_link}
+    return f"{BLOG_URL}?token={link}"
 
 async def get_settings(group_id):
     settings = temp.SETTINGS.get(group_id)
