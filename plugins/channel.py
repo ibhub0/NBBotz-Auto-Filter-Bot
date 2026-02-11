@@ -53,18 +53,12 @@ async def media(bot, message):
         LOGGER.error(f"Error In Movie Update - {e}")
         pass
 
-async def get_file_website_url(kind, search_movie):
+async def get_file_website_url(kind, search_movie, bot_username):
     """Content ke 'kind' ke aadhar par website URL generate karta hai."""
-    # 'kind' should be uppercase (e.g., 'MOVIE', 'TV_SERIES')
-    if "MOVIE" in kind:
-        base_url = "https://filmy4uhd.vercel.app/Movies"
-    elif "SERIES" in kind:
-        base_url = "https://filmy4uhd.vercel.app/Series"
-    else:
-        base_url = "https://filmy4uhd.vercel.app"
-    
-    # Filename ko URL-friendly banana
-    return f"{base_url}/{search_movie}"
+    # SafeLink Integration: Directly return the BLOG_URL with the Telegram start link as a token
+    # The site expects ?token={original_telegram_start_link}
+    start_link = f"https://t.me/{bot_username}?start=getfile-{search_movie}"
+    return f"{BLOG_URL}?token={start_link}"
 
 
 async def send_movie_update(bot, file_name, caption):
@@ -98,7 +92,7 @@ async def send_movie_update(bot, file_name, caption):
         full_caption = SILENTX_UPDATE_CAPTION.format(file_name, kind, quality, pixel, language, imdb_link)
 
         # Dynamic URL generation for the 'Get File' button
-        get_file_url = await get_file_website_url(kind, search_movie)
+        get_file_url = await get_file_website_url(kind, search_movie, bot.me.username)
 
         buttons = [[
             InlineKeyboardButton(f"❤️ {reaction_counts[unique_id]['❤️']}", callback_data=f"r_{unique_id}_{search_movie}_heart"),                
@@ -142,7 +136,7 @@ async def reaction_handler(client, query):
         file_name = search_movie.replace("-", " ")
         imdb_data = await get_imdb_details(file_name)
         kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_")
-        get_file_url = await get_file_website_url(kind, search_movie)
+        get_file_url = await get_file_website_url(kind, search_movie, client.me.username)
         
         if user_id in user_reactions[unique_id]:
             old_emoji = user_reactions[unique_id][user_id]
