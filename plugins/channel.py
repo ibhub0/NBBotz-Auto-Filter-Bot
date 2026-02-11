@@ -13,7 +13,7 @@ from logging_helper import LOGGER
 from typing import Optional
 from datetime import datetime
 from pyrogram import Client, filters
-from database.ia_filterdb import save_file
+from database.ia_filterdb import save_file, get_search_results
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
 
