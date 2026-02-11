@@ -17,15 +17,15 @@ from database.ia_filterdb import save_file
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
 
-CAPTION_LANGUAGES = ["Bhojpuri", "Hindi", "Bengali", "Tamil", "English", "Bangla", "Telugu", "Malayalam", "Kannada", "Marathi", "Punjabi", "Bengoli", "Gujrati", "Korean", "Gujarati", "Spanish", "French", "German", "Chinese", "Arabic", "Portuguese", "Russian", "Japanese", "Odia", "Assamese", "Urdu"]
+CAPTION_LANGUAGES = ["Bhojpuri", "Hindi", "Bengali", "Tamil", "English", "Bangla", "Telugu", "Malayalam", "Kannada", "Marathi", "Punjabi", "Gujarati", "Korean", "Spanish", "French", "German", "Chinese", "Arabic", "Portuguese", "Russian", "Japanese", "Odia", "Assamese", "Urdu"]
 
 SILENTX_UPDATE_CAPTION = """𝖭𝖤𝖶 𝖥𝖨𝖫𝖤 𝖠𝖣𝖣𝖤𝖣 ✅
 
 {} #{}
-📺 𝖥𝗈𝗋𝗆𝖺𝗍 - {}
-🔰 𝖰𝗎𝖺𝗅𝗂𝗍𝗒 - {}
-🔈 𝖠𝗎𝖽𝗂𝗈 - {}
 🖇️ <a href="{}">𝖨𝖬𝖣𝖡 𝖨𝗇𝖿𝗈</a>
+
+🔰 <b>𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽 𝖫𝗂𝗇𝗄𝗌:</b>
+{}
 """
 
 notified_movies = set()
@@ -74,41 +74,65 @@ async def send_movie_update(bot, file_name, caption):
         year_match = re.search(r"\b(19|20)\d{2}\b", caption)
         year = year_match.group(0) if year_match else None      
         season_match = re.search(r"(?i)(?:s|season)0*(\d{1,2})", caption) or re.search(r"(?i)(?:s|season)0*(\d{1,2})", file_name)
+        
         if year:
             file_name = file_name[:file_name.find(year) + 4]
         elif season_match:
             season = season_match.group(1)
             file_name = file_name[:file_name.find(season) + 1]
-        quality = await get_qualities(caption) or "HDRip"
-        pixel = await get_pixels(caption) or "720p"
-        language = ", ".join([lang for lang in CAPTION_LANGUAGES if lang.lower() in caption.lower()]) or "Not Idea"
+            
         if file_name in notified_movies:
             return 
         notified_movies.add(file_name)
+        
         imdb_data = await get_imdb_details(file_name)
         title = imdb_data.get("title", file_name)
         imdb_link = imdb_data.get("url", "") if imdb_data else ""
-        kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_") if imdb_data else ""
+        kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_") if imdb_data else "MOVIE"
         poster = await fetch_movie_poster(title, year)        
         
+        # Search for all versions of this movie
+        search_query = title
+        files, _, _ = await get_search_results(None, search_query, max_results=50)
+        
+        if not files:
+            return
+
+        # Group and format links
+        version_links = []
+        for file in files:
+            f_name = file.file_name
+            f_id = file.file_id
+            
+            # Extract metadata for display
+            q = await get_qualities(f_name) or "HDRip"
+            p = await get_pixels(f_name) or "720p"
+            lang = ", ".join([l for l in CAPTION_LANGUAGES if l.lower() in f_name.lower()]) or "Hindi"
+            
+            # Construct SafeLink for this specific file
+            # Token logic: pass start_file_{file_id}
+            start_link = f"https://t.me/{bot.me.username}?start=file_0_{f_id}"
+            safe_link = f"{BLOG_URL}?token={start_link}"
+            
+            link_text = f"• <a href='{safe_link}'>{p} {q} [{lang}]</a>"
+            if link_text not in version_links:
+                version_links.append(link_text)
+        
+        final_links_text = "\n".join(version_links)
         search_movie = file_name.replace(" ", "-")
         unique_id = generate_unique_id(search_movie)
         reaction_counts[unique_id] = {"❤️": 0, "👍": 0, "👎": 0, "🔥": 0}
         user_reactions[unique_id] = {}        
-        full_caption = SILENTX_UPDATE_CAPTION.format(file_name, kind, quality, pixel, language, imdb_link)
-
-        # Dynamic URL generation for the 'Get File' button
-        get_file_url = await get_file_website_url(kind, search_movie)
+        
+        full_caption = SILENTX_UPDATE_CAPTION.format(file_name, kind, imdb_link, final_links_text)
 
         buttons = [[
             InlineKeyboardButton(f"❤️ {reaction_counts[unique_id]['❤️']}", callback_data=f"r_{unique_id}_{search_movie}_heart"),                
             InlineKeyboardButton(f"👍 {reaction_counts[unique_id]['👍']}", callback_data=f"r_{unique_id}_{search_movie}_like"),
             InlineKeyboardButton(f"👎 {reaction_counts[unique_id]['👎']}", callback_data=f"r_{unique_id}_{search_movie}_dislike"),
             InlineKeyboardButton(f"🔥 {reaction_counts[unique_id]['🔥']}", callback_data=f"r_{unique_id}_{search_movie}_fire")
-        ],[
-            # 'Get File' button ab website ke link par jayega
-            InlineKeyboardButton('Get File', url=get_file_url) 
         ]]
+        
         if poster:
             photo_file = io.BytesIO(poster)
             photo_file.name = await generate_random_filename()
@@ -136,14 +160,6 @@ async def reaction_handler(client, query):
         if unique_id not in reaction_counts:
             return
         
-        # IMDB details ko dobara fetch karein taaki 'kind' mil sake (Reaction update ke liye zaroori)
-        # Yeh thoda slow ho sakta hai, behtar yahi hai ki 'kind' ko callback data mein pass kiya jaye ya message text se nikala jaye.
-        # Lekin current code structure mein yeh sabse seedha tareeka hai.
-        file_name = search_movie.replace("-", " ")
-        imdb_data = await get_imdb_details(file_name)
-        kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_")
-        get_file_url = await get_file_website_url(kind, search_movie)
-        
         if user_id in user_reactions[unique_id]:
             old_emoji = user_reactions[unique_id][user_id]
             if old_emoji == new_emoji:
@@ -158,8 +174,6 @@ async def reaction_handler(client, query):
             InlineKeyboardButton(f"👍 {reaction_counts[unique_id]['👍']}", callback_data=f"r_{unique_id}_{search_movie}_like"),
             InlineKeyboardButton(f"👎 {reaction_counts[unique_id]['👎']}", callback_data=f"r_{unique_id}_{search_movie}_dislike"),
             InlineKeyboardButton(f"🔥 {reaction_counts[unique_id]['🔥']}", callback_data=f"r_{unique_id}_{search_movie}_fire")
-        ],[
-            InlineKeyboardButton('Get File', url=get_file_url) # Updated URL
         ]]
         await query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(updated_buttons))
     except Exception as e:
