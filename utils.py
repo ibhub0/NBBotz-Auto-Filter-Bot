@@ -168,6 +168,50 @@ async def get_status(bot_id):
         return False  
 
 async def get_poster(query, bulk=False, id=False, file=None):
+    # --- New API Integration ---
+    try:
+        if not id:
+            search_url = f"https://imdb-api-lux.wemedia360.workers.dev/search?query={query.strip()}"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(search_url, timeout=10) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        if data.get("results"):
+                            movie = data["results"][0]
+                            # Map new API fields to existing structure
+                            return {
+                                'title': movie.get('title'),
+                                'votes': "N/A",
+                                "aka": "N/A",
+                                "seasons": "N/A",
+                                "box_office": "N/A",
+                                'localized_title': movie.get('title'),
+                                'kind': movie.get("type", "movie").title(),
+                                "imdb_id": movie.get('id'),
+                                "cast": "N/A",
+                                "runtime": "N/A",
+                                "countries": "N/A",
+                                "certificates": "N/A",
+                                "languages": "N/A",
+                                "director": "N/A",
+                                "writer": "N/A",
+                                "producer": "N/A",
+                                "composer": "N/A",
+                                "cinematographer": "N/A",
+                                "music_team": "N/A",
+                                "distributors": "N/A",
+                                'release_date': str(movie.get('year', "N/A")),
+                                'year': movie.get('year'),
+                                'genres': "N/A",
+                                'poster': movie.get('image_large'),
+                                'plot': "N/A",
+                                'rating': "N/A",
+                                'url': movie.get('imdb')
+                            }
+    except Exception as e:
+        LOGGER.error(f"New IMDb API error: {e}")
+
+    # --- Fallback to Original imdbpy Logic ---
     if not id:
         query = (query.strip()).lower()
         title = query

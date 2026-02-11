@@ -89,7 +89,8 @@ async def send_movie_update(bot, file_name, caption):
         title = imdb_data.get("title", file_name)
         imdb_link = imdb_data.get("url", "") if imdb_data else ""
         kind = imdb_data.get("kind", "").strip().upper().replace(" ", "_") if imdb_data else "MOVIE"
-        poster = await fetch_movie_poster(title, year)        
+        poster_url = imdb_data.get("poster") if imdb_data else None
+        poster = await fetch_movie_poster(title, year, poster_url)        
         
         # Search for all versions of this movie
         search_query = title
@@ -189,13 +190,24 @@ async def get_imdb_details(name):
             "title": imdb.get("title", formatted_name),
             "kind": imdb.get("kind", "Movie"),
             "year": imdb.get("year"),
-            "url" : imdb.get("url")
+            "url" : imdb.get("url"),
+            "poster": imdb.get("poster")
         }
     except Exception as e:
         LOGGER.error(f"IMDB fetch error: {e}")
         return {}
 
-async def fetch_movie_poster(title: str, year: Optional[int] = None) -> Optional[str]:
+async def fetch_movie_poster(title: str, year: Optional[int] = None, poster_url: Optional[str] = None) -> Optional[str]:
+    if poster_url:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(poster_url, timeout=10) as response:
+                    if response.status == 200:
+                        return await response.read()
+        except Exception as e:
+            LOGGER.error(f"Error downloading poster from URL: {e}")
+
+    # Fallback/Default API
     base_url = "https://image.silentxbotz.tech/api/v1/poster"
     params = {"title": title.strip()}    
     if year is not None:
@@ -210,23 +222,8 @@ async def fetch_movie_poster(title: str, year: Optional[int] = None) -> Optional
                 if response.status == 200:
                     image_data = await response.read()
                     return image_data                
-                response_text = await response.text()
-                if response.status == 400:
-                    raise ValueError(f"Invalid request: {response_text}")
-                elif response.status == 404:
-                    raise ValueError(f"No poster found for: {title}")
-                elif response.status == 500:
-                    raise ValueError(f"Server error: {response_text}")
-                else:
-                    raise ValueError(f"API error: HTTP {response.status} - {response_text}")
-    except aiohttp.ClientError as e:
-        LOGGER.error(f"Network error occurred: {str(e)}")
-    except asyncio.TimeoutError:
-        LOGGER.error("Request timed out after 20 seconds")
-    except ValueError as e:
-        LOGGER.error(str(e))
     except Exception as e:
-        LOGGER.error(f"Unexpected error: {str(e)}")   
+        LOGGER.error(f"External poster API error: {str(e)}")   
     return None
 
 
