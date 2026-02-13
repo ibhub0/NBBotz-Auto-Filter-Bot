@@ -113,7 +113,10 @@ async def send_movie_update(bot, file_name, caption):
             # Construct SafeLink for this specific file
             # Token logic: pass start_file_{file_id}
             start_link = f"https://t.me/{bot.me.username}?start=file_0_{f_id}"
-            safe_link = f"{BLOG_URL}?token={start_link}"
+            
+            # Ensure BLOG_URL doesn't have a trailing slash for consistent formatting
+            base_url = BLOG_URL.rstrip('/')
+            safe_link = f"{base_url}/#/safe-link?url={start_link}"
             
             link_text = f"• <a href='{safe_link}'>{p} {q} [{lang}]</a>"
             if link_text not in version_links:
