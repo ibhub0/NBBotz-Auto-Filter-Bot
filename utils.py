@@ -170,7 +170,7 @@ async def get_status(bot_id):
 async def get_poster(query, bulk=False, id=False, file=None):
     # --- New API Integration ---
     try:
-        if not id:
+        if not id and not bulk:
             search_url = f"https://imdb-api-lux.wemedia360.workers.dev/search?query={query.strip()}"
             async with aiohttp.ClientSession() as session:
                 async with session.get(search_url, timeout=10) as response:
