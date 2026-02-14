@@ -1,4 +1,5 @@
 import re
+import base64
 import io
 import math
 import random
@@ -116,7 +117,10 @@ async def send_movie_update(bot, file_name, caption):
             
             # Ensure BLOG_URL doesn't have a trailing slash for consistent formatting
             base_url = BLOG_URL.rstrip('/')
-            safe_link = f"{base_url}/#/safe-link?url={start_link}"
+            
+            # Encode start_link to base64 for cleaner URL
+            token = base64.urlsafe_b64encode(start_link.encode()).decode().rstrip("=")
+            safe_link = f"{base_url}/#/verify/{token}"
             
             link_text = f"• <a href='{safe_link}'>{p} {q} [{lang}]</a>"
             if link_text not in version_links:

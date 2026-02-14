@@ -302,12 +302,16 @@ async def search_gagala(text):
     titles = soup.find_all( 'h3' )
     return [title.getText() for title in titles]
 
+import base64
+
 async def get_shortlink(link, grp_id):
     settings = await get_settings(grp_id)
     site = settings['shortner']
     # Start Link Generation Logic
     if "demoby.vercel.app" in site:
-        return f"https://{site}/#/safe-link?url={link}"
+        # Encode the link to base64 to create a clean token
+        token = base64.urlsafe_b64encode(link.encode()).decode().rstrip("=")
+        return f"https://{site}/#/verify/{token}"
     
     # Fallback to Shortzy if user changes back to valid API-based shortener
     api = settings['api']
