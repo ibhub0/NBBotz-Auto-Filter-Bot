@@ -42,12 +42,6 @@ async def start(client, message):
         user_id = int(userid)
         grp_id = temp.VERIFICATIONS.get(user_id, 0)
     
-
-
-    if len(m.command) == 2 and m.command[1].startswith(('notcopy', 'sendall')):
-
-
-    if len(m.command) == 2 and m.command[1].startswith(('notcopy', 'sendall')):
         settings = await get_settings(grp_id)         
         verify_id_info = await db.get_verify_id_info(user_id, verify_id)
         if not verify_id_info or verify_id_info["verified"]:
