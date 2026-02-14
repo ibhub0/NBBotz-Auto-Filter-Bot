@@ -69,8 +69,8 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/how_to_downlod_7")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/how_to_downlod_7")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/how_to_downlod_7")
 
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "v2links.com")
-SHORTENER_API = environ.get("SHORTENER_API", "3f2562bc90d63cf9b355d30d852")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "arolinks.com")
+SHORTENER_API = environ.get("SHORTENER_API", "7179d3dc854e96df2562bc90d63cf9b35d30d852")
 
 MOVIE_UPDATE_NOTIFICATION = bool(environ.get("MOVIE_UPDATE_NOTIFICATION", True))
 NO_RESULTS_MSG = bool(environ.get("NO_RESULTS_MSG", False))
