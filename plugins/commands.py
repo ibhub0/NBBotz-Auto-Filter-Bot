@@ -42,35 +42,7 @@ async def start(client, message):
         user_id = int(userid)
         grp_id = temp.VERIFICATIONS.get(user_id, 0)
     
-    # Check for Base64 encoded token from website redirection
-    elif len(m.command) == 2 and not m.command[1].startswith(('channel', 'getfile')):
-        try:
-            # Decode the token
-            # Padding adjustment just in case
-            encoded_str = m.command[1]
-            padding = len(encoded_str) % 4
-            if padding:
-                encoded_str += "=" * (4 - padding)
-            
-            decoded_bytes = base64.urlsafe_b64decode(encoded_str)
-            decoded_link = decoded_bytes.decode("utf-8")
-            
-            # Helper to parse the decoded link parameters
-            if "start=" in decoded_link:
-                params = decoded_link.split("start=")[-1]
-                # Update message command so that subsequent checks work
-                m.command = ["/start", params]
-                
-                # If decoded param is notcopy/sendall, update variables immediately
-                if params.startswith(('notcopy', 'sendall')):
-                   _, userid, verify_id, file_id = params.split("_", 3)
-                   user_id = int(userid)
-                   grp_id = temp.VERIFICATIONS.get(user_id, 0)
-            else:
-                 pass
-        except Exception as e:
-            # If decoding fails, ignore and proceed to other checks
-            pass
+
 
     if len(m.command) == 2 and m.command[1].startswith(('notcopy', 'sendall')):
 

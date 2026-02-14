@@ -112,15 +112,9 @@ async def send_movie_update(bot, file_name, caption):
             lang = ", ".join([l for l in CAPTION_LANGUAGES if l.lower() in f_name.lower()]) or "Hindi"
             
             # Construct SafeLink for this specific file
-            # Token logic: pass start_file_{file_id}
+            # Construct SafeLink for this specific file
             start_link = f"https://t.me/{bot.me.username}?start=file_0_{f_id}"
-            
-            # Ensure BLOG_URL doesn't have a trailing slash for consistent formatting
-            base_url = BLOG_URL.rstrip('/')
-            
-            # Encode start_link to base64 for cleaner URL
-            token = base64.urlsafe_b64encode(start_link.encode()).decode().rstrip("=")
-            safe_link = f"{base_url}/#/verify/{token}"
+            safe_link = await get_shortlink(start_link, 0)
             
             link_text = f"• <a href='{safe_link}'>{p} {q} [{lang}]</a>"
             if link_text not in version_links:

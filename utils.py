@@ -307,11 +307,10 @@ import base64
 async def get_shortlink(link, grp_id):
     settings = await get_settings(grp_id)
     site = settings['shortner']
-    # Start Link Generation Logic
-    if "demoby.vercel.app" in site:
-        # Encode the link to base64 to create a clean token
-        token = base64.urlsafe_b64encode(link.encode()).decode().rstrip("=")
-        return f"https://{site}/#/verify/{token}"
+    api = settings['api']
+    shortzy = Shortzy(api, site)
+    link = await shortzy.convert(link)
+    return link
     
     # Fallback to Shortzy if user changes back to valid API-based shortener
     api = settings['api']
