@@ -139,7 +139,7 @@ class Database:
             'log': LOG_VR_CHANNEL,
             'tutorial': TUTORIAL,
             'shortner': SHORTENER_WEBSITE,
-            'api': "None",
+            'api': SHORTENER_API,
             'is_verify': IS_VERIFY,
             'caption': CUSTOM_FILE_CAPTION,
             'fsub_id': AUTH_CHANNEL
