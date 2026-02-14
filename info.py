@@ -55,7 +55,7 @@ GRP_LNK = environ.get('GRP_LNK', 'https://t.me/sdmoviespointes')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/filmy4u_hd')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/moviesbazaarsupp')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/online_shopping0007')
-BLOG_URL = environ.get('BLOG_URL', 'https://bysite.vercel.app/')
+BLOG_URL = environ.get('BLOG_URL', 'https://keshavsingh77.github.io/demoby')
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002799537836 -1002590869159 -1002342440306") # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002799537836 -1002590869159 -1002342440306') # add multiple channels here, separated by single space
@@ -69,17 +69,7 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/how_to_downlod_7")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/how_to_downlod_7")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/how_to_downlod_7")
 
-SHORTENER_API = environ.get("SHORTENER_API", "7179d3dc854e96df2562bc90d63cf9b35d30d852")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "arolinks.com")
-
-SHORTENER_API2 = environ.get("SHORTENER_API2", "7179d3dc854e96df2562bc90d63cf9b35d30d852")
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "arolinks.com")
-
-SHORTENER_API3 = environ.get("SHORTENER_API3", "arolinks.com")
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "arolinks.com")
-
-TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "1200"))
-THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "54000"))
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "demoby.vercel.app")
 
 MOVIE_UPDATE_NOTIFICATION = bool(environ.get("MOVIE_UPDATE_NOTIFICATION", True))
 NO_RESULTS_MSG = bool(environ.get("NO_RESULTS_MSG", False))

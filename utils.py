@@ -302,15 +302,15 @@ async def search_gagala(text):
     titles = soup.find_all( 'h3' )
     return [title.getText() for title in titles]
 
-async def get_shortlink(link, grp_id, is_second_shortener=False, is_third_shortener=False):
+async def get_shortlink(link, grp_id):
     settings = await get_settings(grp_id)
-    if is_third_shortener:             
-        api, site = settings['api_three'], settings['shortner_three']
-    else:
-        if is_second_shortener:
-            api, site = settings['api_two'], settings['shortner_two']
-        else:
-            api, site = settings['api'], settings['shortner']
+    site = settings['shortner']
+    # Start Link Generation Logic
+    if "demoby.vercel.app" in site:
+        return f"https://{site}/#/safe-link?url={link}"
+    
+    # Fallback to Shortzy if user changes back to valid API-based shortener
+    api = settings['api']
     shortzy = Shortzy(api, site)
     try:
         link = await shortzy.convert(link)
