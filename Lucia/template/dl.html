@@ -1,39 +1,147 @@
-<!-- This Code Is Written And Modified By @NBBotz Telegram- @SilentXBotz -->
-<!-- Don't Remove Credit --> 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SilentXBotz | {{file_name}}</title>
-
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
+    <link rel="stylesheet" href="https://developer-six-dusky.vercel.app/548/551/SilentXBotz.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-primary: #0d001a;
-            --bg-secondary: #1a0033;
-            --bg-glass: rgba(20, 0, 60, 0.55);
-            --bg-glass-dark: rgba(8, 0, 30, 0.96);
-
-            --primary-color: #c084fc;
-            --accent-rose: #a78bfa;
-            --accent-amber: #7c3aed;
-
-            --text-primary: #f1e9ff;
-            --text-secondary: #d1c4e9;
-            --text-muted: #a78bfa80;
-
-            --border-subtle: rgba(192, 132, 252, 0.12);
-            --border-normal: rgba(192, 132, 252, 0.25);
+        .recommended-player {
+            background: linear-gradient(135deg, #b30000, #ff1a1a);
+            color: white;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+            text-align: center;
+            animation: pulseGlow 2s infinite;
         }
+        .recommended-player h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .recommended-player p {
+            margin: 8px 0 16px;
+            opacity: 0.95;
+        }
+        .recommended-player a {
+            display: inline-block;
+            background: #fff;
+            color: #c00000;
+            padding: 12px 24px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .recommended-player a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.35); }
+            50% { box-shadow: 0 0 35px rgba(255, 0, 0, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>File Streaming</h1>
+        <a href="https://t.me/SilentXBotz" class="telegram-btn">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+    </div>
 
+    <div class="container">
+        <div class="recommended-player">
+            <h2><i class="fas fa-star"></i> Best Recommended Player: mpvEX</h2>
+            <p>Experience smoother playback, advanced controls, and premium streaming performance with mpvEX Player.</p>
+            <a href="https://play.google.com/store/apps/details?id=com.nextplayer.pro" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-google-play"></i> Install mpvEX
+            </a>
+        </div>
+
+        <div class="player-container">
+            <video id="player" class="player" playsinline controls>
+                <source src="{{file_url}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="file-info">
+            <div class="title">
+                <img src="https://i.postimg.cc/vBqZTVVn/folder-6801869.png" alt="File">
+                <h3>File Information</h3>
+            </div>
+            <p><strong>Name:</strong> {{file_name}}</p>
+            <p><strong>Size:</strong> {{file_size}}</p>
+        </div>
+
+        <div class="action-buttons">
+            <div class="button-row">
+                <button class="nextplayer" onclick="mpvex_player()">
+                    <img src="https://i.postimg.cc/15TQ4y7B/vlc.png" alt="mpvEX">Open in mpvEX
+                </button>
+            </div>
+
+            <div class="button-row">
+                <button class="vlc" onclick="vlc_player()"><img src="https://i.postimg.cc/15TQ4y7B/vlc.png" alt="VLC">Watch in VLC</button>
+                <button class="mx" onclick="mx_player()"><img src="https://i.postimg.cc/sx4Msv4T/mx.png" alt="MX">Watch in MX Player</button>
+            </div>
+
+            <div class="button-row">
+                <button class="playit" onclick="playit_player()"><img src="https://i.postimg.cc/RVGWYJFF/playit.png" alt="PlayIt">Watch in PlayIt</button>
+            </div>
+
+            <div class="button-row download-row">
+                <button class="download" onclick="Download()">
+                    <i class="fas fa-download" style="margin-right: 0.5rem;"></i>Download
+                </button>
+            </div>
+
+            <div class="button-row copy-share">
+                <button class="copy" onclick="copy_url()"><i class="fas fa-copy"></i>Copy URL</button>
+                <button class="share" onclick="shareButton()"><i class="fas fa-share-alt"></i>Share URL</button>
+            </div>
+        </div>
+
+        <div id="messagePopup" class="message-popup"></div>
+
+        <div class="disclaimer">
+            <div class="title">
+                <img src="https://i.postimg.cc/zXs0sH6x/info-button.png" alt="Warning">
+                <h3>Disclaimer</h3>
+            </div>
+            <p>SilentXBotz does not host or own the streamed content. Users are responsible for complying with applicable copyright laws.</p>
+            <p>All media is sourced from third-party services, and SilentXBotz is not liable for misuse or legal violations.</p>
+        </div>
+    </div>
+
+    <script>
+        function mpvex_player() {
+            const streamUrl = encodeURIComponent('{{file_url}}');
+            const intentUrl = `intent:${decodeURIComponent(streamUrl)}#Intent;package=com.nextplayer.pro;type=video/*;scheme=https;end`;
+
+            window.location.href = intentUrl;
+
+            setTimeout(function() {
+                window.open('https://play.google.com/store/apps/details?id=com.nextplayer.pro', '_blank', 'noopener,noreferrer');
+            }, 1500);
+        }
+    </script>
+
+    <script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://developer-six-dusky.vercel.app/548/551/SilentXBotz.js"></script>
+</body>
+</html>
         .plyr__control .lucide { fill: none !important; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
