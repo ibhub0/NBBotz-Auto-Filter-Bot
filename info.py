@@ -69,7 +69,7 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/how_to_downlod_7")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/how_to_downlod_7")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/how_to_downlod_7")
 
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "piko.site.je")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "https://piko.site.je")
 SHORTENER_API = environ.get("SHORTENER_API", "e9167cdd8f095bca65f9f26e9c35586685263a25")
 
 MOVIE_UPDATE_NOTIFICATION = bool(environ.get("MOVIE_UPDATE_NOTIFICATION", True))
