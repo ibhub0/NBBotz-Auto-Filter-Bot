@@ -70,7 +70,7 @@ TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/how_to_downlod_7")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/how_to_downlod_7")
 
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "sarkaritrend.boats")
-SHORTENER_API = environ.get("SHORTENER_API", "93319f88d8487f0281f1c389aeec1ddd711186e4")
+SHORTENER_API = environ.get("SHORTENER_API", "a1e72b52330cd27d9f59607dfbab5e782309dcdc")
 
 MOVIE_UPDATE_NOTIFICATION = bool(environ.get("MOVIE_UPDATE_NOTIFICATION", True))
 NO_RESULTS_MSG = bool(environ.get("NO_RESULTS_MSG", False))
