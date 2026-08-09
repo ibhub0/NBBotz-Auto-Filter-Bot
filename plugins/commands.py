@@ -107,6 +107,38 @@ async def start(client, message):
             parse_mode=enums.ParseMode.HTML,
         )
         return
+
+@Client.on_message(filters.command("help") & filters.incoming)
+async def help_cmd(client, message):
+    help_text = (
+        "<b>🤖 <u>BOT COMMANDS & HELP MENU</u> 🤖</b>\n\n"
+        "<b>📌 <u>Auto-Caption Commands (Channel):</u></b>\n"
+        "• <code>/set_caption {file_name}</code> - Set custom caption template\n"
+        "• <code>/del_caption</code> - Restore default channel caption\n"
+        "• <code>/caption_preview</code> - Preview caption template\n"
+        "• <code>/caption_vars</code> - View allowed placeholders ({file_name}, {caption}, {language}, {year}, {quality}, {file_size}, {duration}, {season}, {episode})\n"
+        "• <code>/channel_stats</code> - View channel edit count\n\n"
+        "<b>📌 <u>Auto-Filter & Search Commands:</u></b>\n"
+        "• <code>/settings</code> - Change group / bot settings\n"
+        "• <code>/details</code> - View group settings details\n"
+        "• <code>/plan</code> - Check premium subscription plans\n"
+        "• <code>/myplan</code> - Check active premium status\n"
+        "• <code>/trendlist</code> - Get top search trending list\n\n"
+        "<b>📌 <u>Admin Commands:</u></b>\n"
+        "• <code>/stats</code> - Check bot uptime, RAM, CPU & DB status\n"
+        "• <code>/index</code> - Index channel files into DB\n"
+        "• <code>/batch</code> - Create batch download link\n"
+        "• <code>/broadcast</code> - Broadcast message to all users\n"
+        "• <code>/restart</code> - Restart the bot instance\n"
+    )
+    buttons = [[
+        InlineKeyboardButton('✨ Add to Group', url=f'http://telegram.me/{temp.U_NAME}?startgroup=true'),
+        InlineKeyboardButton('🎟️ Upgrade Premium', callback_data="premium")
+    ],[
+        InlineKeyboardButton('👤 About', callback_data='me'),
+        InlineKeyboardButton('🔐 Close', callback_data='close_data')
+    ]]
+    await message.reply_text(help_text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML)
         
     if message.command[1].startswith("reff_"):
         try:

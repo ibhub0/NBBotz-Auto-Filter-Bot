@@ -112,6 +112,33 @@ async def SilentXBotz_start():
     await SilentX.start()
     bot_info = await SilentX.get_me()
     SilentX.username = bot_info.username
+
+    try:
+        from pyrogram.types import BotCommand
+        cmd_list = [
+            BotCommand("start", "Start the bot & welcome menu"),
+            BotCommand("help", "View help & commands list"),
+            BotCommand("set_caption", "Set channel custom caption template"),
+            BotCommand("del_caption", "Delete channel custom caption template"),
+            BotCommand("caption_preview", "Preview custom caption template"),
+            BotCommand("caption_vars", "View caption placeholders list"),
+            BotCommand("channel_stats", "View channel caption edit statistics"),
+            BotCommand("plan", "Check premium plans & pricing"),
+            BotCommand("myplan", "Check active premium subscription"),
+            BotCommand("trendlist", "View top search trending list"),
+            BotCommand("settings", "Configure bot and group settings"),
+            BotCommand("details", "View group settings details"),
+            BotCommand("stats", "Check bot status & DB stats"),
+            BotCommand("index", "Index channel files into DB"),
+            BotCommand("batch", "Create batch download link"),
+            BotCommand("broadcast", "Broadcast message to all users"),
+            BotCommand("restart", "Restart the bot instance"),
+        ]
+        await SilentX.set_bot_commands(cmd_list)
+        LOGGER.info("✅ Telegram Bot Command Menu registered successfully!")
+    except Exception as e:
+        LOGGER.error(f"Error registering Telegram bot commands: {e}")
+
     await initialize_clients()
     loaded_plugins = silentx_plugins_handler(SilentX)
     if loaded_plugins:
