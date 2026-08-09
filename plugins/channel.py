@@ -54,6 +54,12 @@ async def media(bot, message):
         LOGGER.error(f"Error In Movie Update - {e}")
         pass
 
+    try:
+        from plugins.auto_caption import auto_edit_caption
+        await auto_edit_caption(bot, message)
+    except Exception as e:
+        LOGGER.error(f"Error in Auto-Caption edit: {e}")
+
 async def get_file_website_url(kind, search_movie):
     """Content ke 'kind' ke aadhar par website URL generate karta hai."""
     # 'kind' should be uppercase (e.g., 'MOVIE', 'TV_SERIES')
